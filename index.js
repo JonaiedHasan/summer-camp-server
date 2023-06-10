@@ -35,6 +35,21 @@ async function run() {
     const classesCollection = client.db("sportsDB").collection("classes");
     const instructorsCollection = client.db("sportsDB").collection("instructors");
     const selectedClassCollection = client.db("sportsDB").collection("selectedClass");
+    const usersCollection = client.db('sportsDB').collection('users')
+
+
+    // users api
+    app.post('/users', async(req, res) =>{
+      const user = req.body;
+      console.log(user);
+      const query ={email: user.email}
+      const remainingUser = await usersCollection.findOne(query);
+      if (remainingUser) {
+        return res.send({message: 'This user already exists'})
+      }
+      const result = await usersCollection.insertOne(user);
+      res.send(result)
+    })
 
 
 // get classes
