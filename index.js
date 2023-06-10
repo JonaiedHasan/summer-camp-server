@@ -44,6 +44,16 @@ async function run() {
       res.send(result)
     })
 
+    // check admin
+
+    app.get('/users/admin/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email }
+      const user = await usersCollection.findOne(query);
+      const result = { admin: user?.role === 'admin' }
+      res.send(result) 
+    })
+
 
 
     // make admin
@@ -72,6 +82,13 @@ async function run() {
     })
 
 
+
+    app.delete('/users/admin/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result)
+    })
 
 
 
