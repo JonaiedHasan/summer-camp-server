@@ -151,6 +151,31 @@ async function run() {
       res.send(result)
     })
 
+    // approve
+    app.put('/classes/:id' , async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const updateStatus = {
+        $set:{
+          status: 'Approved'
+        }
+      };
+      const result = await classesCollection.updateOne(filter,updateStatus);
+      res.send(result)
+    })
+    // denied
+    app.patch('/classes/:id' , async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const updateStatus = {
+        $set:{
+          status: 'Denied'
+        }
+      };
+      const result = await classesCollection.updateOne(filter,updateStatus);
+      res.send(result)
+    })
+
 
     // check instructor
     // app.get('/users/instructor/:email', verifyJWT, async (req, res) => {
