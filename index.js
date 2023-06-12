@@ -78,6 +78,16 @@ async function run() {
       }
       next()
     }
+    // verify admin instructor
+    // const verifyInstructor = async (req, res, next) => {
+    //   const email = req.decoded.email;
+    //   const query = { email: email }
+    //   const user = await usersCollection.findOne(query);
+    //   if (user?.role !== 'instructor') {
+    //     return res.status(403).send({ error: true, message: 'forbidden message' })
+    //   }
+    //   next()
+    // }
 
     // users api
     app.get('/users', verifyJWT,verifyAdmin, async (req, res) => {
@@ -199,6 +209,16 @@ async function run() {
       const result = await classesCollection.find().toArray();
       res.send(result)
     })
+
+    // post classes
+
+    app.post('/classes',verifyJWT, async(req, res) =>{
+      const newClass = req.body;
+      console.log(newClass);
+      const result = await classesCollection.insertOne(newClass)
+      res.send(result)
+    })
+
     // get instructors
     app.get('/instructors', async (req, res) => {
       const result = await instructorsCollection.find().toArray();
