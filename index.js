@@ -31,10 +31,6 @@ const verifyJWT = (req, res, next) => {
 }
 
 
-console.log(process.env.DB_USER);
-console.log(process.env.DB_PASS);
-
-
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xdyi47s.mongodb.net/?retryWrites=true&w=majority`;
@@ -180,7 +176,6 @@ async function run() {
 
         res.send({ result, deletedRes });
       } catch (error) {
-        console.error(error);
         res.status(500).send({ error: "An error occurred while processing the payment." });
       }
     });
@@ -278,7 +273,6 @@ async function run() {
 
     app.post('/users', async (req, res) => {
       const user = req.body;
-      console.log(user);
       const query = { email: user.email }
       const remainingUser = await usersCollection.findOne(query);
       if (remainingUser) {
@@ -299,7 +293,6 @@ async function run() {
 
     app.post('/classes', verifyJWT, async (req, res) => {
       const newClass = req.body;
-      console.log(newClass);
       const result = await classesCollection.insertOne(newClass)
       res.send(result)
     })
@@ -313,7 +306,6 @@ async function run() {
     // select classes
     app.get('/selectedClass', verifyJWT, async (req, res) => {
       const email = req.query.email;
-      console.log(email)
 
       if (!email) {
         res.send([]);
@@ -331,7 +323,6 @@ async function run() {
 
     app.get('/instructorClass', verifyJWT, async (req, res) => {
       const email = req.query.email;
-      console.log(email)
 
       if (!email) {
         res.send([]);
@@ -349,7 +340,6 @@ async function run() {
 
     app.post('/selectedClass', async (req, res) => {
       const item = req.body;
-      console.log(item);
       const result = await selectedClassCollection.insertOne(item);
       res.send(result)
     })
