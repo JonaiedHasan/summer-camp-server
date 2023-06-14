@@ -4,7 +4,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
-
+const stripe = require("stripe")(process.env.PAYMENT_SECRET_KEY);
 
 // middleware
 app.use(cors());
@@ -69,7 +69,7 @@ async function run() {
 
 
     // verify admin middleware
-    const verifyAdmin = async (req, res, next) => {
+      const verifyAdmin = async (req, res, next) => {
       const email = req.decoded.email;
       const query = { email: email }
       const user = await usersCollection.findOne(query);
@@ -134,6 +134,10 @@ async function run() {
       res.send(result)
     })
 
+
+
+
+// payment
 
 
 
@@ -265,6 +269,24 @@ async function run() {
       }
       const query = { email: email };
       const result = await selectedClassCollection.find(query).toArray();
+      res.send(result)
+    })
+
+    
+    app.get('/instructorClass', verifyJWT, async (req, res) => {
+      const email = req.query.email;
+      console.log(email)
+
+      if (!email) {
+        res.send([]);
+      }
+
+      const decodedEmail = req.decoded.email;
+      if (email !== decodedEmail) {
+        return res.status(403).send({ error: true, message: 'illegal access' })
+      }
+      const query = { email: email };
+      const result = await classesCollection.find(query).toArray();
       res.send(result)
     })
 
